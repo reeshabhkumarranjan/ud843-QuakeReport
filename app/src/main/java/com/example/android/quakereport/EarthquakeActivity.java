@@ -34,18 +34,21 @@ public class EarthquakeActivity extends AppCompatActivity {
         setContentView(R.layout.earthquake_activity);
 
         ArrayList<Quake> quakes=new ArrayList<>();
-        quakes.add(new Quake(8.5f,"Jamaica", (long) 100000000));
-        quakes.add(new Quake(5.6f,"Afghanistan", (long) 100000000));
-        quakes.add(new Quake(8.4f,"America", (long) 100000000));
-        quakes.add(new Quake(1.3f,"New York", (long) 1000000123));
-        quakes.add(new Quake(4.3f,"Thailand", (long) 1022000000));
-        quakes.add(new Quake(2.5f,"Washington", (long) 1320000000));
-        quakes.add(new Quake(2.6f,"Downtown", (long) 770000000));
-        quakes.add(new Quake(3.9f,"Gotham", (long) 560000000));
-        quakes.add(new Quake(6.7f,"Baker Street", (long) 300000000));
-        quakes.add(new Quake(3.1f,"Antarctica", (long) 880000000));
-        quakes.add(new Quake(0.5f,"Indonesia", (long) 1013300200));
-        quakes.add(new Quake(1.2f,"Malaysia", (long) 1013900090));
+        quakes=QueryUtils.extractQuakes();
+/*
+quakes.add(new Quake(8.5f,"Jamaica", (long) 100000000));
+quakes.add(new Quake(5.6f,"Afghanistan", (long) 100000000));
+quakes.add(new Quake(8.4f,"America", (long) 100000000));
+quakes.add(new Quake(1.3f,"New York", (long) 1000000123));
+quakes.add(new Quake(4.3f,"Thailand", (long) 1022000000));
+quakes.add(new Quake(2.5f,"Washington", (long) 1320000000));
+quakes.add(new Quake(2.6f,"Downtown", (long) 770000000));
+quakes.add(new Quake(3.9f,"Gotham", (long) 560000000));
+quakes.add(new Quake(6.7f,"Baker Street", (long) 300000000));
+quakes.add(new Quake(3.1f,"Antarctica", (long) 880000000));
+quakes.add(new Quake(0.5f,"Indonesia", (long) 1013300200));
+quakes.add(new Quake(1.2f,"Malaysia", (long) 1013900090));
+*/
 
         QuakeAdapter quakeAdapter=new QuakeAdapter(this,R.layout.quake_tile,quakes);
         ListView listView=findViewById(R.id.list);
