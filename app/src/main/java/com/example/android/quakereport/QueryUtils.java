@@ -74,8 +74,9 @@ private static final String SAMPLE_JSON_RESPONSE = "{\"type\":\"FeatureCollectio
                 double magnitude=properties.getDouble("mag");
                 String place=properties.getString("place");
                 long time=properties.getLong("time");
+                String url=properties.getString("url");
 
-                quakes.add(new Quake(magnitude,place,time));
+                quakes.add(new Quake(magnitude,place,time,url));
             }
 
         } catch (JSONException e) {

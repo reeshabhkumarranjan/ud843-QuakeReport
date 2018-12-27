@@ -16,8 +16,13 @@
 package com.example.android.quakereport;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -26,6 +31,8 @@ import java.util.Date;
 
 public class EarthquakeActivity extends AppCompatActivity {
 
+    private ArrayList<Quake> quakes;
+
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
     @Override
@@ -33,7 +40,7 @@ public class EarthquakeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        ArrayList<Quake> quakes=new ArrayList<>();
+//        ArrayList<Quake> quakes=new ArrayList<>();
         quakes=QueryUtils.extractQuakes();
 /*
 quakes.add(new Quake(8.5f,"Jamaica", (long) 100000000));
@@ -53,7 +60,14 @@ quakes.add(new Quake(1.2f,"Malaysia", (long) 1013900090));
         QuakeAdapter quakeAdapter=new QuakeAdapter(this,R.layout.quake_tile,quakes);
         ListView listView=findViewById(R.id.list);
         listView.setAdapter(quakeAdapter);
-
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String url=quakes.get(position).getUrl();
+                Intent intent=new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
+            }
+        });
     }
 }

@@ -10,12 +10,14 @@ public class Quake {
     private String baseLocation;
     private String locationOffset;
     private Date date;
+    private String url;
 
-    public Quake(double magnitude, String location, Long time) {
+    public Quake(double magnitude, String location, Long time, String url) {
         this.magnitude = magnitude;
         this.location = location;
         this.date=new Date();
         date.setTime(time);
+        this.url=url;
 
         if(location.contains("km")){
             int separatorPosition=location.indexOf(" of ");
@@ -65,5 +67,9 @@ public class Quake {
     public String getSimpleMagnitude() {
         DecimalFormat decimalFormat=new DecimalFormat("0.0");
         return decimalFormat.format(magnitude);
+    }
+
+    public String getUrl() {
+        return url;
     }
 }
