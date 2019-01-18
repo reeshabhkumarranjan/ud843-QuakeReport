@@ -6,6 +6,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 /**
@@ -47,11 +54,75 @@ private static final String SAMPLE_JSON_RESPONSE = "{\"type\":\"FeatureCollectio
     private QueryUtils() {
     }
 
+    public static String extractJsonFromStream(InputStream inputStream){
+        StringBuilder output=new StringBuilder();
+
+        if(inputStream!=null){
+            InputStreamReader inputStreamReader=new InputStreamReader(inputStream,Charset.forName("UTF-8"));
+            BufferedReader bufferedReader=new BufferedReader(inputStreamReader);
+            try {
+                String line=bufferedReader.readLine();
+                while (line!=null){
+                    output.append(line);
+                    line=bufferedReader.readLine();
+                }
+            } catch (IOException e) {
+                return null;
+            }
+        }
+
+        return output.toString();
+    }
+
+    public static String makeHttpRequest(URL url){
+
+        String jsonResponse="";
+
+        if (url==null){
+            return jsonResponse;
+        }
+
+        HttpURLConnection httpURLConnection=null;
+        InputStream inputStream=null;
+
+        try {
+            httpURLConnection=(HttpURLConnection) url.openConnection();
+            httpURLConnection.setReadTimeout(10000);
+            httpURLConnection.setConnectTimeout(15000);
+            httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.connect();
+
+            if(httpURLConnection.getResponseCode()==200){
+                inputStream=httpURLConnection.getInputStream();
+                jsonResponse=extractJsonFromStream(inputStream);
+            }
+            else{
+                System.err.println("Error response code: "+httpURLConnection.getResponseCode());
+            }
+        } catch (IOException e) {
+            System.err.println("Cannot open connection.");
+        } finally {
+            if (httpURLConnection!=null){
+                httpURLConnection.disconnect();
+            }
+
+            if(inputStream!=null){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    System.err.println("Cannot close input stream.");
+                }
+            }
+        }
+
+        return jsonResponse;
+    }
+
     /**
      * Return a list of {@link Quake} objects that has been built up from
      * parsing a JSON response.
      */
-    public static ArrayList<Quake> extractQuakes() {
+    public static ArrayList<Quake> extractQuakes(String jsonResponse) {
 
         // Create an empty ArrayList that we can start adding Quakes to
         ArrayList<Quake> quakes = new ArrayList<>();
@@ -64,7 +135,7 @@ private static final String SAMPLE_JSON_RESPONSE = "{\"type\":\"FeatureCollectio
             // TODO: Parse the response given by the SAMPLE_JSON_RESPONSE string and
             // build up a list of Quake objects with the corresponding data.
 
-            JSONObject root=new JSONObject(SAMPLE_JSON_RESPONSE);
+            JSONObject root=new JSONObject(jsonResponse);
             JSONArray features=root.getJSONArray("features");
 
             for (int i = 0; i < features.length(); i++) {
