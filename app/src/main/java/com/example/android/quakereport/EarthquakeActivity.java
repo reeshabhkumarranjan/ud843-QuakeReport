@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     private final String urlString="https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
     private static final int EARTHQUAKE_LOADER_ID=0;
     private TextView emptyView;
+    private ProgressBar progressBar;
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
@@ -53,6 +55,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         updateUI();
         Log.i(LOG_TAG,"TEST: onLoadFinished() called");
         emptyView.setText("No earthquakes found.");
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -72,6 +75,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         ListView listView=findViewById(R.id.listView);
         emptyView=(TextView)findViewById(R.id.emptyView);
         listView.setEmptyView(emptyView);
+        progressBar=(ProgressBar)findViewById(R.id.progressBar);
 
     }
 
