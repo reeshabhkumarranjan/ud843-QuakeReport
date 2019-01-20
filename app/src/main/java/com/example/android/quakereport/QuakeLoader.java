@@ -2,6 +2,7 @@ package com.example.android.quakereport;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.util.Log;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 public class QuakeLoader extends AsyncTaskLoader<ArrayList<Quake>> {
 
     private String urlString;
+    private static final String LOG_TAG=QuakeLoader.class.getName();
 
     public QuakeLoader(@NonNull Context context, String urlString) {
         super(context);
@@ -23,6 +25,7 @@ public class QuakeLoader extends AsyncTaskLoader<ArrayList<Quake>> {
     @Override
     protected void onStartLoading() {
         forceLoad();
+        Log.i(LOG_TAG,"TEST: onStartLoading() called");
     }
 
     @Nullable
@@ -36,6 +39,8 @@ public class QuakeLoader extends AsyncTaskLoader<ArrayList<Quake>> {
             System.err.println("Malformed URL");
             return null;
         }
+
+        Log.i(LOG_TAG,"TEST: loadInBackground() called");
 
         return QueryUtils.extractQuakes(jsonResponse);
     }

@@ -15,39 +15,35 @@
  */
 package com.example.android.quakereport;
 
-import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 //import androidx.loader.app.LoaderManager;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Quake>> {
 
-    private ArrayList<Quake> quakes;
+    private ArrayList<Quake> quakes=new ArrayList<Quake>();
     private final String urlString="https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
     private static final int EARTHQUAKE_LOADER_ID=0;
+    private TextView emptyView;
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
     @Override
     public Loader<ArrayList<Quake>> onCreateLoader(int id, Bundle args) {
+        Log.i(LOG_TAG,"TEST: onCreateLoader() called");
         return new QuakeLoader(EarthquakeActivity.this,urlString);
     }
 
@@ -55,11 +51,14 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     public void onLoadFinished(Loader<ArrayList<Quake>> loader, ArrayList<Quake> data) {
         this.quakes=data;
         updateUI();
+        Log.i(LOG_TAG,"TEST: onLoadFinished() called");
+        emptyView.setText("No earthquakes found.");
     }
 
     @Override
     public void onLoaderReset(Loader<ArrayList<Quake>> loader) {
         this.quakes=new ArrayList<Quake>();
+        Log.i(LOG_TAG,"TEST: onLoaderReset() called");
     }
 
 
@@ -69,11 +68,16 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         setContentView(R.layout.earthquake_activity);
 //        new EarthquakeTask().execute(urlString);
         getLoaderManager().initLoader(EARTHQUAKE_LOADER_ID,null,this);
+        Log.i(LOG_TAG,"TEST: Loader initialised.");
+        ListView listView=findViewById(R.id.listView);
+        emptyView=(TextView)findViewById(R.id.emptyView);
+        listView.setEmptyView(emptyView);
+
     }
 
     public void updateUI(){
         QuakeAdapter quakeAdapter=new QuakeAdapter(this,R.layout.quake_tile,quakes);
-        ListView listView=findViewById(R.id.list);
+        ListView listView=findViewById(R.id.listView);
         listView.setAdapter(quakeAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
