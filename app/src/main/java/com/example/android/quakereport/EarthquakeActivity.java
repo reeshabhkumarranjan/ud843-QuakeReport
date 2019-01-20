@@ -18,6 +18,8 @@ package com.example.android.quakereport;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -40,6 +42,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     private static final int EARTHQUAKE_LOADER_ID=0;
     private TextView emptyView;
     private ProgressBar progressBar;
+    private boolean isConnected;
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
@@ -54,7 +57,14 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         this.quakes=data;
         updateUI();
         Log.i(LOG_TAG,"TEST: onLoadFinished() called");
-        emptyView.setText("No earthquakes found.");
+
+        if(isConnected){
+            emptyView.setText("No earthquakes found.");
+        }
+        else {
+            emptyView.setText("No internet connection.");
+        }
+
         progressBar.setVisibility(View.GONE);
     }
 
@@ -76,6 +86,10 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         emptyView=(TextView)findViewById(R.id.emptyView);
         listView.setEmptyView(emptyView);
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
+
+        ConnectivityManager connectivityManager=(ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork=connectivityManager.getActiveNetworkInfo();
+        isConnected=(activeNetwork!=null && activeNetwork.isConnectedOrConnecting());
 
     }
 
